@@ -9,7 +9,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Cuke = {
 
     // 检测是否含有属性
-    isProp: function isProp(obj, prop) {
+    addProto: function addProto(obj, prop) {
         if (prop in obj) {
             obj.prototype[prop] = obj[prop];
             return false;
@@ -57,7 +57,7 @@ var Cuke = {
     // element
     {
         obj: HTMLElement,
-        key: ['insertAdjacentElement1', 'insertAdjacentText1'],
+        key: ['insertAdjacentElement', 'insertAdjacentText'],
         val: [
         // insertAdjacentElement
         function (where, node) {
@@ -92,7 +92,7 @@ var Cuke = {
                 var key = item.key[j],
                     val = item.val[j];
 
-                if (this.isProp(item.obj, key)) {
+                if (this.addProto(item.obj, key)) {
                     console.info(item.obj[key]);
                     item.obj.prototype[key] = item.obj[key] || val;
                 }

@@ -1,7 +1,7 @@
 let Cuke = {
 
     // 检测是否含有属性
-    isProp: (obj, prop) => {
+    addProto: (obj, prop) => {
         if(prop in obj){
             obj.prototype[prop] = obj[prop];
             return false;
@@ -48,7 +48,7 @@ let Cuke = {
         // element
         {
             obj: HTMLElement,
-            key: ['insertAdjacentElement1', 'insertAdjacentText1'],
+            key: ['insertAdjacentElement', 'insertAdjacentText'],
             val: [
                 // insertAdjacentElement
                 function(where, node){
@@ -87,7 +87,7 @@ let Cuke = {
                 let key = item.key[j],
                     val = item.val[j];
 
-                if(this.isProp(item.obj, key)){
+                if(this.addProto(item.obj, key)){
                     console.info(item.obj[key]);
                     item.obj.prototype[key] = item.obj[key] || val;
                 }
