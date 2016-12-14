@@ -1,0 +1,17 @@
+%flex{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -o-box;
+    display: box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+}
+
+%txt-ell{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

@@ -1,0 +1,49 @@
+.linkage-wrap .linkage-name, .linkage-wrap .linkage-option div {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; }
+
+.linkage {
+  height: 30px;
+  margin: 50px; }
+
+.linkage-wrap {
+  position: relative;
+  height: 100%;
+  width: 100px;
+  float: left;
+  padding: 0 25px 0 10px;
+  border: 1px solid #999;
+  box-sizing: border-box; }
+  .linkage-wrap:after {
+    content: "";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    margin-top: -3px;
+    border: 5px solid transparent;
+    border-top-color: #000; }
+  .linkage-wrap .linkage-name {
+    height: 100%;
+    width: 100%;
+    line-height: 30px;
+    font-size: 14px; }
+  .linkage-wrap .linkage-option {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    margin: -1px -1px 0 -1px;
+    border: 1px solid #cccccc;
+    display: none; }
+    .linkage-wrap .linkage-option div {
+      height: 23px;
+      line-height: 25px;
+      padding-left: 10px;
+      border-top: 1px solid #f6f6f6; }
+      .linkage-wrap .linkage-option div:hover {
+        color: #fff;
+        background-color: #f60; }
+    .linkage-wrap .linkage-option .active {
+      color: #f60;
+      background-color: #fff; }
