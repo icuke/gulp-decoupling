@@ -307,6 +307,7 @@ var Base = function () {
         key: 'handler',
         value: function handler(obj, type, handle) {
             obj.handler = obj.handler || {};
+
             type in obj.handler ? obj.handler[type].push(handle) : obj.handler[type] = [handle];
         }
 
@@ -315,7 +316,6 @@ var Base = function () {
     }, {
         key: 'removeEvent',
         value: function removeEvent(obj, type, handleName) {
-
             var _handler = obj.handler,
                 _type = type ? _handler[type] : '';
 

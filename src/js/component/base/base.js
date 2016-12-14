@@ -268,12 +268,12 @@ class Base{
     // 便于移除事件的中间件
     handler(obj, type, handle){
         obj.handler = obj.handler||{};
+
         type in obj.handler? obj.handler[type].push(handle):obj.handler[type] = [handle];
     }
 
     // 移除绑定事件
     removeEvent(obj, type, handleName){
-
         var _handler = obj.handler,
             _type = type? _handler[type]:'';
 
