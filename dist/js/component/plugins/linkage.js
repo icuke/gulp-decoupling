@@ -281,7 +281,7 @@ var kk = linkage.linkageInit({
     i = 0;
 
 var o = kk.eles[0];
-
+o.classList.add1('red');
 var fn1 = kk.addEvent(o, '.linkage-name', 'click', function () {
     i++;
     alert('我是通过事件委托的点击事件处理函数, 第:' + i + '次');

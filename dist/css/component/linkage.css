@@ -6,6 +6,8 @@
 .linkage {
   height: 30px;
   margin: 50px; }
+  .linkage.red {
+    color: #f00; }
 
 .linkage-wrap {
   position: relative;

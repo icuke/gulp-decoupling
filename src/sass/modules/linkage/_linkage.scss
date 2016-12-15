@@ -55,7 +55,9 @@ $drop: 5px;
     height: $h;
     margin: 50px;
 
-    
+    &.red{
+        color: #f00;
+    }
 }
 
 .linkage-wrap{

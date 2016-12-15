@@ -6,7 +6,7 @@ let Cuke = {
             obj.prototype[prop] = obj[prop];
             return false;
         }
-        return !obj.prototype[prop];
+        return !(prop in obj.prototype);
     },
 
     data: [
@@ -36,7 +36,6 @@ let Cuke = {
                     while(i++ < len){
                         if(this[i-1]===item){
                             return i-1;
-                            break;
                         }
                     }
 
@@ -88,7 +87,6 @@ let Cuke = {
                     val = item.val[j];
 
                 if(this.addProto(item.obj, key)){
-                    console.info(item.obj[key]);
                     item.obj.prototype[key] = item.obj[key] || val;
                 }
             }
