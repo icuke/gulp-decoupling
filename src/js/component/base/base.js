@@ -13,7 +13,7 @@ let Cuke = {
         // Array
         {
             obj: Array,
-            key: ['forEach', 'from', 'indexOf'],
+            key: ['forEach', 'from', 'indexOf', 'lastIndexOf'],
             val: [
                 // forEach
                 function(callback){
@@ -30,8 +30,15 @@ let Cuke = {
                 },
 
                 // indexOf
-                function(item){
-                    var i = 0, len = this.length;
+                function(item, index){
+                    if(index && Math.abs(index) > this.length){
+                        return -1;
+                    }
+
+                    var i = (index && index < 0? index + this.length : (index||0)),
+                        len = this.length;
+
+                    console.info(i, len);
 
                     while(i++ < len){
                         if(this[i-1]===item){
@@ -40,6 +47,21 @@ let Cuke = {
                     }
 
                     return -1;
+                },
+
+                // laseIndexOf
+                function(item, index){
+                    var arr = [].concat(this),
+                        len = this.length,
+                        index = index && index != 0 ? (index < 0 ? - 1 - index : len - index - 1) : 0;
+
+                    arr.reverse();
+                    var i = arr.indexOf(item, index);
+                    if(i==-1){
+                        return -1;
+                    }else{
+                        return len - i - 1;
+                    }
                 }
             ]
         },

@@ -198,31 +198,31 @@ var kk = linkage.linkageInit({
     i = 0;
 
 var o = kk.eles[0];
-o.classList.add1('red');
-var fn1 = kk.addEvent(o, '.linkage-name', 'click', function(){
-    i++;
-    alert('我是通过事件委托的点击事件处理函数, 第:'+i+'次');
-});
-var fn2 = kk.addEvent(o, 'click', function(){
-    i++;
-    alert('我是直接添加的点击事件事件处理函数, 第:'+i+'次');
-});
-var fn3 = kk.one(o, 'click', function(){
-    i++;
-    alert('我是通过事件委托的事件处理函数, 第:'+i+'次, 我只会执行一次');
-});
 
 
-kk.addEvent(remove, 'click', function(){
-    // 移除事件委托
-    kk.removeEvent(o, 'click', fn1);
-    kk.removeEvent(o, 'click', fn2);
-    alert('我移除了上面的事件委托和直接绑定的点击事件, 看看有没有成功');
-});
+function re(str){
+    var _s = '',
+        _str = '',
+        i = 1;
+    str.replace(/(\w{1})/g, function(s, m, n){
+        if(_s==s){
+            i++;
+        }else{
+            if(_str==''){
+                _str = s;
+            }else{
+                _str +=i;
+                _str +=s;
+                i = 1;
+            }
 
+            _s = s;
+        }
 
+        if(n == str.length-1){
+            _str += i;
+        }
+    })
 
-
-
-
-
+    return _str.length<str.length? _str:str;
+}
