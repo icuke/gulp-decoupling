@@ -226,3 +226,5 @@ function re(str){
 
     return _str.length<str.length? _str:str;
 }
+
+

@@ -21,7 +21,7 @@ var Cuke = {
     // Array
     {
         obj: Array,
-        key: ['forEach', 'from', 'indexOf', 'lastIndexOf'],
+        key: ['forEach', 'from', 'indexOf1', 'lastIndexOf1'],
         val: [
         // forEach
         function (callback) {
@@ -40,18 +40,16 @@ var Cuke = {
 
         // indexOf
         function (item, index) {
-            if (index && Math.abs(index) > this.length) {
-                return -1;
+            var len = this.length;
+            if (index < 0 && index + len <= 0) {
+                index = 0;
+            } else if (index > len) {
+                index = len;
             }
 
-            var i = index && index < 0 ? index + this.length : index || 0,
-                len = this.length;
-
-            console.info(i, len);
-
-            while (i++ < len) {
-                if (this[i - 1] === item) {
-                    return i - 1;
+            while (index++ < len) {
+                if (this[index - 1] === item) {
+                    return index - 1;
                 }
             }
 
@@ -62,7 +60,8 @@ var Cuke = {
         function (item, index) {
             var arr = [].concat(this),
                 len = this.length,
-                index = index && index != 0 ? index < 0 ? -1 - index : len - index - 1 : 0;
+                index = index >= len ? 0 : index,
+                index = index && index != 0 ? index < 0 ? -1 - index : len - index - 1 : len;
 
             arr.reverse();
             var i = arr.indexOf(item, index);
