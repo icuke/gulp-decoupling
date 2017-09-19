@@ -1,9 +1,7 @@
-
-%linkage{
+%linkage {
     $pd: 10px;
     $lh: 25px;
     $h: 125px;
-
     position: fixed;
     left: 0;
     right: 0;
@@ -11,8 +9,7 @@
     padding: $pd;
     height: $pd*2 + $h;
     box-sizing: border-box;
-
-    &:before{
+    &:before {
         content: "";
         height: $lh;
         position: absolute;
@@ -23,25 +20,20 @@
         border: 1px solid #ddd;
         z-index: -1;
     }
-
     @extend %flex;
-
-    .linkage-list{
-        flex:1;
+    .linkage-list {
+        flex: 1;
         height: $h;
         text-align: center;
         line-height: $lh;
-        
-        .linkage-scroll{
+        .linkage-scroll {
             margin-top: $lh*2;
-
-            &:hover{
-
+            &:hover {
+                //
             }
         }
     }
 }
-
 
 $h: 30px;
 $w: 100px;
@@ -50,69 +42,67 @@ $pl: 10px;
 $bd: 1px;
 $bdc: #999;
 $drop: 5px;
-
-.linkage{
+.linkage {
     height: $h;
     margin: 50px;
-
-    &.red{
+    &.red {
         color: #f00;
     }
 }
 
-.linkage-wrap{
-        position: relative;
-        height: 100%;
-        width: $w;
-        float: left;
-        padding: 0 25px 0 $pl;
-        border: $bd solid $bdc;
-        box-sizing: border-box;
-
-        &:after{
-            content: "";
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            margin-top: -3px;
-            border: 5px solid transparent;
-            border-top-color: #000;
-        }
-
-        .linkage-name{
-            height: 100%;
-            width: 100%;
-            line-height: $h;
-            font-size: $fz;
-
-            @extend %txt-ell;
-        }
-
+.linkage-wrap {
+    
+    &.active{
         .linkage-option{
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 100%;
-            margin: -1px #{-$bd} 0 #{-$bd};
-            border: 1px solid $bdc + #333;
-            display: none;
-
-            div{
-                height: $h - 7;
-                line-height: $h - 5;
-                padding-left: $pl;
-                border-top: 1px solid #f6f6f6;
-
-                @extend %txt-ell;
-
-                &:hover{
-                    color: #fff;
-                    background-color: #f60;
-                }
-            }
-            .active{
-                color: #f60;
-                background-color: #fff;
-            }
+            display: block;
         }
     }
+
+    position: relative;
+    height: 100%;
+    width: $w;
+    float: left;
+    padding: 0 25px 0 $pl;
+    border: $bd solid $bdc;
+    box-sizing: border-box;
+    &:after {
+        content: "";
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        margin-top: -3px;
+        border: 5px solid transparent;
+        border-top-color: #000;
+    }
+    .linkage-name {
+        height: 100%;
+        width: 100%;
+        line-height: $h;
+        font-size: $fz;
+        @extend %txt-ell;
+    }
+    .linkage-option {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        margin: -1px #{-$bd} 0 #{-$bd};
+        border: 1px solid $bdc + #333;
+        display: none;
+        div {
+            height: $h - 7;
+            line-height: $h - 5;
+            padding-left: $pl;
+            border-top: 1px solid #f6f6f6;
+            @extend %txt-ell;
+            &:hover {
+                color: #fff;
+                background-color: #f60;
+            }
+        }
+        .active {
+            color: #f60;
+            background-color: #fff;
+        }
+    }
+}

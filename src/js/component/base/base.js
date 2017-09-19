@@ -1,6 +1,6 @@
 let Cuke = {
 
-    // 检测是否含有属性
+    // 检测并扩充内置对象
     addProto: (obj, prop) => {
         if(prop in obj){
             obj.prototype[prop] = obj[prop];
@@ -13,7 +13,7 @@ let Cuke = {
         // Array
         {
             obj: Array,
-            key: ['forEach', 'from', 'indexOf1', 'lastIndexOf1'],
+            key: ['forEach', 'from', 'indexOf', 'lastIndexOf'],
             val: [
                 // forEach
                 function(callback){
@@ -72,30 +72,47 @@ let Cuke = {
             val: [
                 // insertAdjacentElement
                 function(where, node){
-                    switch (where) {  
-                        case "beforebegin":  
+                    switch (where) {
+                        case "beforebegin":
                             this.parentNode.insertBefore(node, this);
-                            break;  
-                        case "afterbegin":  
+                            break;
+                        case "afterbegin":
                             this.insertBefore(node, this.firstChild);
-                            break;  
+                            break;
                         case "beforeend":
                             console.info(this);
                             this.appendChild(node);
-                            break;  
-                        case "afterend":  
-                            if (this.nextSibling) this.parentNode.insertBefore(node, this.nextSibling); 
-                            else this.parentNode.appendChild(node);  
-                            break;  
+                            break;
+                        case "afterend":
+                            if (this.nextSibling) this.parentNode.insertBefore(node, this.nextSibling);
+                            else this.parentNode.appendChild(node);
+                            break;
                     }
                 },
 
                 // insertAdjacentText
-                function(where, txt) {  
-                    var parsedText = document.createTextNode(txt);  
-                    this.insertAdjacentElement1(where, parsedText);  
+                function(where, txt) {
+                    var parsedText = document.createTextNode(txt);
+                    this.insertAdjacentElement1(where, parsedText);
                 }
 
+            ]
+        },
+
+        // Function
+        {
+            obj: Function,
+            key: ['bind'],
+            val: [
+                // bind
+                function(oThis){
+                    var args = [].slice.call(arguments),
+                        arg = args.shift(),
+                        self = this;
+                    return function (){
+                        self.apply(arg, args.concat([].slice.call(arguments)));
+                    };
+                }
             ]
         }
     ],
@@ -118,8 +135,6 @@ let Cuke = {
 Cuke.init();
 
 Cuke = null;
-
-
 
 class Base{
     constructor(){
@@ -188,6 +203,10 @@ class Base{
         return obj.previousElementSibling || obj.previousSibling;
     }
 
+    create(target, options){
+
+    }
+
     // 返回父元素
     /**
      * [parents description]
@@ -209,7 +228,7 @@ class Base{
             while(dom.tagName.toLowerCase()!='body'){
                 if(type=='.'){
                     if(re.test(dom.className)){
-                        arr.push(dom); 
+                        arr.push(dom);
                     }
                 }else{
                     if(dom.tagName.toLowerCase()==str){
@@ -225,7 +244,7 @@ class Base{
             return arr.length? arr:null;
         }
 
-        return null;    
+        return null;
     }
 
     /***** events *****/
@@ -234,8 +253,8 @@ class Base{
 
         if(typeof type == 'string'){
             var _fn = (e) => {
-                var _this = e.target;
-                var re = new RegExp('(?:^|\\s+)'+target.substr(1)+'(?:\\s+|$)');
+                var _this = e.target,
+                    re = new RegExp('(?:^|\\s+)'+target.substr(1)+'(?:\\s+|$)');
                 while(_this!=obj){
                     if(target.charAt(0)=='.'){
                         if(re.test(_this.className)){
@@ -364,7 +383,7 @@ class Base{
                     obj.classList.add(str);
                 }
                 return this;
-            } 
+            }
         }else{
             Base.prototype.addClass = (obj, str) =>{
                 if(!this.hasClass(obj, str)){
@@ -395,21 +414,46 @@ class Base{
         }
         return this.removeClass(obj, str);
     }
-    
+
+    toggleClass(obj, str){
+        if(obj.classList){
+            Base.prototype.toggleClass = (obj, str) => {
+                obj.classList.toggle(str);
+            }
+        }else{
+            Base.prototype.toggleClass = (obj, str) => {
+                if(this.hasClass(obj, str)){
+                    this.removeClass(obj, str);
+                }else{
+                    this.addClass(obj, str);
+                }
+            }
+        }
+    }
 
     /***** 3.func *****/
 
-    extend(){
-        let _obj = arguments[0],
-            args = [].slice.call(arguments, 1);
+    extend(...args){
+        let _obj = args[0],
+            _args;
 
-        args.forEach(function(v){
-            for(var prop in v){
-                _obj[prop] = v[prop];
-            }
-        });
+        if(typeof _obj == 'boolean'){
+            _obj = arguments[1];
+            _args = [].slice.call(arguments, 2);
 
-        return this||_obj;
+            _args.forEach(function(v){
+                for(var prop in v){
+                    var _str = JSON.stringify(v[prop]);
+                    _obj[prop] = JSON.parse(_str);
+                }
+            });
+
+        }else{
+            _args = [].slice.call(arguments, 1);
+            _obj = Object.assign(_obj, ..._args);
+        }
+
+        return this != Window ? this : _obj;
     }
 
     ready(callback){
@@ -430,9 +474,9 @@ class Base{
             async: true
         },
             xhr = new XMLHttpRequest();
-    
+
         this.extend&&this.extend(_option, options || {});
-    
+
         xhr.onreadystatechange = function(){
             if(xhr.readyState == 4){
                 if(xhr.status == 200){
@@ -440,16 +484,32 @@ class Base{
                 }else{
                     _option.error&&_option.error(xhr.statusText, xhr.status);
                 }
-            }        
+            }
         }
-    
+
         xhr.open(_option.method, _option.url, _option.async);
-        xhr.send();    
+        xhr.send();
+    }
+
+    setCookie(name, value, iDay){
+        var oDate = new Date();
+        oDate.setDate(+oDate + iDay);
+        document.cookie = name + '=' + value + ';expires=' + oDate;
+    }
+
+    getCookie(name){
+        var arr = document.cookie.split('; ');
+        for(var i = 0,val;val=arr[i++];){
+            var _arr = val.split('=');
+            if(_arr[0] == name){
+                return _arr[1];
+            }
+        }
+        return '';
     }
 
     /***** 4.pos *****/
     offset(obj){
-
         let top = 0, left = 0;
 
         while(obj.offsetParent){
@@ -467,13 +527,13 @@ class Base{
     // 上右下左分别返回 0, 1, 2, 3
     getDirection(e, obj){
         var e = e||window.event,
-            w = o.offsetWidth,   
-            h = o.offsetHeight,   
-            x = e.pageX - obj.offsetLeft - w/2*(w>h? h/w:1),   
-            y = e.pageY - obj.offsetTop - h/2*(h>w? w/h:1),   
+            w = o.offsetWidth,
+            h = o.offsetHeight,
+            x = e.pageX - obj.offsetLeft - w/2*(w>h? h/w:1),
+            y = e.pageY - obj.offsetTop - h/2*(h>w? w/h:1),
             d = Math.round(Math.atan2(y, x)/1.57079633+5)%4;
 
-        return d;  
+        return d;
     };
 
     /* 同上
@@ -486,14 +546,14 @@ class Base{
         return arr.indexOf(iMin);
     }
     */
-   
+
     /***** 5.检测 *****/
     // 空对象检测  // 理论上可以检测空数组(只要数组里面有数据) 唯一例外 [, ,]
     isEmptyObj(obj){
         if(obj instanceof Array){
             return !obj.length; // 如果[,] 是空数组, 去掉本行
         }
-            
+
         if(Object.keys){
             return !Object.keys(obj).length;
         }else{
@@ -529,7 +589,7 @@ class Base{
                 }else{
                     return obj.innerText;
                 }
-            }            
+            }
         }else{
             Base.prototype.text = (obj, str, flag) => {
                 if(str===true){

@@ -8,7 +8,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Cuke = {
 
-    // 检测是否含有属性
+    // 检测并扩充内置对象
     addProto: function addProto(obj, prop) {
         if (prop in obj) {
             obj.prototype[prop] = obj[prop];
@@ -21,7 +21,7 @@ var Cuke = {
     // Array
     {
         obj: Array,
-        key: ['forEach', 'from', 'indexOf1', 'lastIndexOf1'],
+        key: ['forEach', 'from', 'indexOf', 'lastIndexOf'],
         val: [
         // forEach
         function (callback) {
@@ -101,6 +101,22 @@ var Cuke = {
         function (where, txt) {
             var parsedText = document.createTextNode(txt);
             this.insertAdjacentElement1(where, parsedText);
+        }]
+    },
+
+    // Function
+    {
+        obj: Function,
+        key: ['bind'],
+        val: [
+        // bind
+        function (oThis) {
+            var args = [].slice.call(arguments),
+                arg = args.shift(),
+                self = this;
+            return function () {
+                self.apply(arg, args.concat([].slice.call(arguments)));
+            };
         }]
     }],
 
@@ -212,6 +228,9 @@ var Base = function () {
         value: function prev(obj) {
             return obj.previousElementSibling || obj.previousSibling;
         }
+    }, {
+        key: 'create',
+        value: function create(target, options) {}
 
         // 返回父元素
         /**
@@ -453,31 +472,65 @@ var Base = function () {
             }
             return this.removeClass(obj, str);
         }
+    }, {
+        key: 'toggleClass',
+        value: function toggleClass(obj, str) {
+            var _this4 = this;
+
+            if (obj.classList) {
+                Base.prototype.toggleClass = function (obj, str) {
+                    obj.classList.toggle(str);
+                };
+            } else {
+                Base.prototype.toggleClass = function (obj, str) {
+                    if (_this4.hasClass(obj, str)) {
+                        _this4.removeClass(obj, str);
+                    } else {
+                        _this4.addClass(obj, str);
+                    }
+                };
+            }
+        }
 
         /***** 3.func *****/
 
     }, {
         key: 'extend',
         value: function extend() {
+
             var _obj = arguments[0],
+                args = void 0;
+
+            if (typeof _obj == 'boolean') {
+                _obj = arguments[1];
+                args = [].slice.call(arguments, 2);
+
+                args.forEach(function (v) {
+                    for (var prop in v) {
+                        var _str = JSON.stringify(v[prop]);
+                        _obj[prop] = JSON.parse(_str);
+                    }
+                });
+            } else {
                 args = [].slice.call(arguments, 1);
 
-            args.forEach(function (v) {
-                for (var prop in v) {
-                    _obj[prop] = v[prop];
-                }
-            });
+                args.forEach(function (v) {
+                    for (var prop in v) {
+                        _obj[prop] = v[prop];
+                    }
+                });
+            }
 
-            return this || _obj;
+            return this != Window ? this : _obj;
         }
     }, {
         key: 'ready',
         value: function ready(callback) {
-            var _this4 = this;
+            var _this5 = this;
 
             var _fn = function _fn() {
                 callback();
-                _this4.removeEvent(document, 'DOMContentLoaded', _fn);
+                _this5.removeEvent(document, 'DOMContentLoaded', _fn);
             };
 
             this.addEvent(document, 'DOMContentLoaded', _fn);
@@ -508,6 +561,25 @@ var Base = function () {
 
             xhr.open(_option.method, _option.url, _option.async);
             xhr.send();
+        }
+    }, {
+        key: 'setCookie',
+        value: function setCookie(name, value, iDay) {
+            var oDate = new Date();
+            oDate.setDate(+oDate + iDay);
+            document.cookie = name + '=' + value + ';expires=' + oDate;
+        }
+    }, {
+        key: 'getCookie',
+        value: function getCookie(name) {
+            var arr = document.cookie.split('; ');
+            for (var i = 0, val; val = arr[i++];) {
+                var _arr = val.split('=');
+                if (_arr[0] == name) {
+                    return _arr[1];
+                }
+            }
+            return '';
         }
 
         /***** 4.pos *****/
@@ -598,7 +670,7 @@ var Base = function () {
     }, {
         key: 'text',
         value: function text(obj, str, flag) {
-            var _this5 = this;
+            var _this6 = this;
 
             if (obj.innerText) {
                 Base.prototype.text = function (obj, str, flag) {
@@ -606,7 +678,7 @@ var Base = function () {
                         return obj.innerText.replace(/\s/gm, '');
                     } else if (str == '' || str) {
                         obj.innerText = str;
-                        return _this5;
+                        return _this6;
                     } else {
                         return obj.innerText;
                     }
@@ -617,7 +689,7 @@ var Base = function () {
                         return obj.textContent.replace(/\s/gm, '');
                     } else if (str == '' || str) {
                         obj.textContent = str;
-                        return _this5;
+                        return _this6;
                     } else {
                         return obj.textContent;
                     }

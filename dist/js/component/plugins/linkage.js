@@ -32,8 +32,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
             value: function each(callback) {
                 var _this2 = this;
 
-                this.eles.forEach(function (ele) {
-                    callback && callback.call(_this2, ele);
+                this.eles.forEach(function (ele, index) {
+                    callback && callback.call(_this2, ele, index);
                 });
             }
 
@@ -221,12 +221,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
             var _this7 = _possibleConstructorReturn(this, (LinkageInit.__proto__ || Object.getPrototypeOf(LinkageInit)).call(this));
 
             _this7.options = {
-                ele: '.linkage',
-                show: true,
-                title: false
+                ele: '.linkage-init',
+                name: '.linkage-name',
+                list: '.linkage-option',
+                active: 'active',
+                show: true
             };
 
-            _this7.extend(_this7.options, options);
+            _this7.extend(true, _this7.options, options);
             _this7.eles = [].from(_this7.getDoms(doc, _this7.options.ele));
 
             _this7.init();
@@ -235,15 +237,25 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         }
 
         _createClass(LinkageInit, [{
+            key: 'creatrView',
+            value: function creatrView() {
+                this.each(function (ele) {});
+            }
+        }, {
             key: 'init',
             value: function init() {
+                var _this8 = this;
+
                 this.each(function (ele) {
                     if (ele.flag) {
                         return;
-                    } /*
-                      this.getType(ele);
-                      this.setType(ele);
-                      this.creatrView(ele);*/
+                    }
+
+                    _this8.creatrView();
+                    /*
+                                     this.getType(ele);
+                                    this.setType(ele);
+                                    this.creatrView(ele);*/
 
                     ele.flag = true;
                 });
@@ -275,9 +287,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     _classCallCheck(this, Base);
 });
 
-var kk = linkage.linkageInit({
-    ele: '.linkage'
-}),
+var arr = ['武汉', '合肥', '南昌', '北京', '苏州'];
+var kk = linkage.linkageInit({}),
     i = 0;
 
 var o = kk.eles[0];
@@ -308,3 +319,14 @@ function re(str) {
 
     return _str.length < str.length ? _str : str;
 }
+
+var arr = [],
+    str = '<img src="http://img.80txt.com/skin/image/logo.gif" alt="" width="100%" />哈哈哈哈 <img src="http://img.80txt.com/skin/image/logo.gif" alt="" width="100%" /><br />';
+
+for (var i = 0, len = arr.length; i < len; i++) {}
+
+for (var i = 0; i < arr.length; i++) {}
+
+for (var i = 0, v; v = arr[i++];) {}
+
+for (var i = 0; i++ in arr;) {}
